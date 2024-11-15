@@ -2,7 +2,7 @@ package com.babymonitor.resultService.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "result")
+//@Document(collection = "result")
 public class Result {
     @Id
     private String id;
@@ -21,7 +21,7 @@ public class Result {
     @Override
     public String toString() {
         return String.format(
-                "Customer[id=%s, result='%s', user='%s', session='%s']",
+                "result:[id=%s, result='%s', user='%s', session='%s']",
                 id, result, user, session);
     }
 

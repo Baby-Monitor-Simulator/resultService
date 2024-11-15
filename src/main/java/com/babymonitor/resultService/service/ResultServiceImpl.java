@@ -17,8 +17,8 @@ public class ResultServiceImpl implements ResultService {
         return resultRepo.findByUser(user);
     };
 
-    public Optional<Result> FindResult(String user, String id){
-        return resultRepo.findById(id);
+    public Result FindResult(String user, String id){
+        return resultRepo.findById(id).orElse(null);
     };
 
     public void addResult(Result result){

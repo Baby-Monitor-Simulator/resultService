@@ -5,6 +5,8 @@ import com.babymonitor.resultService.service.ResultServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 public class ResultController
@@ -18,15 +20,15 @@ public class ResultController
     }
 
     @GetMapping("/{userid}")
-    public String getAllResults(@PathVariable int userid)
+    public List<Result> getAllResults(@PathVariable int userid)
     {
-        return resultServiceImpl.findByUser(String.valueOf(userid)).toString();
+        return resultServiceImpl.findByUser(String.valueOf(userid));
     }
 
     @GetMapping("/{userid}/{resultid}")
-    public String getResult(@PathVariable int userid)
+    public Result getResult(@PathVariable int userid)
     {
-        return resultServiceImpl.FindResult(String.valueOf(userid), String.valueOf(userid)).toString();
+        return resultServiceImpl.FindResult(String.valueOf(userid), String.valueOf(userid));
     }
 
     @PostMapping("/add")

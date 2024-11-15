@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface ResultService {
     List<Result> findByUser(String user);
-    Optional<Result> FindResult(String user, String id);
+    Result FindResult(String user, String id);
     void addResult(Result result);
 }
