@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.babymonitor</groupId>
-	<artifactId>resultServiceImpl</artifactId>
+	<artifactId>resultService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>resultService</name>
 	<description>Result service for babymonitor project</description>
