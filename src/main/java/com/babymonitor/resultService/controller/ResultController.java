@@ -22,13 +22,13 @@ public class ResultController
     @GetMapping("/{userid}")
     public List<Result> getAllResults(@PathVariable int userid)
     {
-        return resultServiceImpl.findByUser(String.valueOf(userid));
+        return resultServiceImpl.findByUser(userid);
     }
 
     @GetMapping("/{userid}/{resultid}")
-    public Result getResult(@PathVariable int userid)
+    public Result getResult(@PathVariable int userid, @PathVariable int resultid)
     {
-        return resultServiceImpl.FindResult(String.valueOf(userid), String.valueOf(userid));
+        return resultServiceImpl.FindResult(String.valueOf(userid), String.valueOf(resultid));
     }
 
     @PostMapping("/add")
