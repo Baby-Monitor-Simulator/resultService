@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@RequestMapping("/api/results")
+@CrossOrigin(origins = "http://localhost:4173")
 public class ResultController
 {
     private ResultServiceImpl resultServiceImpl;
@@ -28,7 +29,7 @@ public class ResultController
     @GetMapping("/{userid}/{resultid}")
     public Result getResult(@PathVariable int userid, @PathVariable int resultid)
     {
-        return resultServiceImpl.FindResult(String.valueOf(userid), String.valueOf(resultid));
+        return resultServiceImpl.findByUserAndSession(userid, resultid);
     }
 
     @PostMapping("/add")

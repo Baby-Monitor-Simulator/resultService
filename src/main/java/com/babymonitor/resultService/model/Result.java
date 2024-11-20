@@ -6,12 +6,12 @@ public class Result {
     @Id
     private String id;
     private String result;
-    private String session;
+    private int session;
     private int user;
 
     public Result() {}
 
-    public Result( String result, int user, String session) {
+    public Result( String result, int user, int session) {
         this.user = user;
         this.session = session;
         this.result = result;
@@ -32,7 +32,7 @@ public class Result {
         return user;
     }
 
-    public String getSession() {
+    public int getSession() {
         return session;
     }
 
@@ -48,7 +48,7 @@ public class Result {
         this.user = user;
     }
 
-    public void setSession(String session) {
+    public void setSession(int session) {
         this.session = session;
     }
 

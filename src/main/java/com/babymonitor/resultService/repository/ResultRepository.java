@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ResultRepository extends MongoRepository<Result, String> {
     List<Result> findByUser(int user);
+    Result findByUserAndSession(int user, int session);
 }
