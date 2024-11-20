@@ -34,42 +34,42 @@ class ResultControllerTest {
 
     @Test
     void whenGetAllResults_thenReturnJsonArray() throws Exception {
-        Result result1 = new Result("Result 1", 1, "session1");
-        Result result2 = new Result("Result 2", 1, "session2");
+        Result result1 = new Result("Result 1", 1, 1);
+        Result result2 = new Result("Result 2", 1, 2);
         List<Result> allResults = Arrays.asList(result1, result2);
 
         when(resultService.findByUser(1)).thenReturn(allResults);
 
-        mockMvc.perform(get("/1")
+        mockMvc.perform(get("/api/results/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].result", is("Result 1")))
-                .andExpect(jsonPath("$[0].session", is("session1")))
+                .andExpect(jsonPath("$[0].session", is(1)))
                 .andExpect(jsonPath("$[1].result", is("Result 2")))
-                .andExpect(jsonPath("$[1].session", is("session2")));
+                .andExpect(jsonPath("$[1].session", is(2)));
     }
 
     @Test
     void whenGetSpecificResult_thenReturnJson() throws Exception {
-        Result result = new Result("Test Result", 1, "session123");
+        Result result = new Result("Test Result", 1, 123);
         result.setId("123");
 
-        when(resultService.FindResult("1", "123")).thenReturn(result);
+        when(resultService.findByUserAndSession(1, 123)).thenReturn(result);
 
-        mockMvc.perform(get("/1/123")
+        mockMvc.perform(get("/api/results/1/123")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result", is("Test Result")))
                 .andExpect(jsonPath("$.user", is(1)))
-                .andExpect(jsonPath("$.session", is("session123")));
+                .andExpect(jsonPath("$.session", is(123)));
     }
 
     @Test
     void whenGetNonExistingResult_thenReturn404() throws Exception {
-        when(resultService.FindResult("1", "999")).thenReturn(null);
+        when(resultService.findByUserAndSession(1, 999)).thenReturn(null);
 
-        mockMvc.perform(get("/1/999")
+        mockMvc.perform(get("/api/results/1/999")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").doesNotExist());
@@ -77,9 +77,9 @@ class ResultControllerTest {
 
     @Test
     void whenAddNewResult_thenReturnSuccess() throws Exception {
-        Result result = new Result("New Result", 1, "newSession");
+        Result result = new Result("New Result", 1, 1);
 
-        mockMvc.perform(post("/add")
+        mockMvc.perform(post("/api/results/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(result)))
                 .andExpect(status().isOk())
@@ -90,7 +90,7 @@ class ResultControllerTest {
     void whenAddNewResultWithInvalidJson_thenReturn400() throws Exception {
         String invalidJson = "{ invalid json }";
 
-        mockMvc.perform(post("/add")
+        mockMvc.perform(post("/api/results/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidJson))
                 .andExpect(status().isBadRequest());
@@ -100,7 +100,7 @@ class ResultControllerTest {
     void whenGetResultsForUserWithNoResults_thenReturnEmptyArray() throws Exception {
         when(resultService.findByUser(999)).thenReturn(List.of());
 
-        mockMvc.perform(get("/999")
+        mockMvc.perform(get("/api/results/999")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
@@ -108,9 +108,9 @@ class ResultControllerTest {
 
     @Test
     void whenAddResultWithNullFields_thenReturnSuccess() throws Exception {
-        Result result = new Result(null, 1, null);
+        Result result = new Result(null, 1, 1);
 
-        mockMvc.perform(post("/add")
+        mockMvc.perform(post("/api/results/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(result)))
                 .andExpect(status().isOk())

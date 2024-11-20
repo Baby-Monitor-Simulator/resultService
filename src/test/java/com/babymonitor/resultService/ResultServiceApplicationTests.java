@@ -45,7 +45,7 @@ class ResultServiceApplicationTests {
 	@Test
 	void whenAddResult_thenResultIsPersistedSuccessfully() {
 		// Given
-		Result result = new Result("Test Result", 1, "session123");
+		Result result = new Result("Test Result", 1, 123);
 
 		// When
 		resultService.addResult(result);
@@ -56,15 +56,15 @@ class ResultServiceApplicationTests {
 		Result savedResult = savedResults.get(0);
 		assertThat(savedResult.getResult()).isEqualTo("Test Result");
 		assertThat(savedResult.getUser()).isEqualTo(1);
-		assertThat(savedResult.getSession()).isEqualTo("session123");
+		assertThat(savedResult.getSession()).isEqualTo(123);
 	}
 
 	@Test
 	void whenFindByUser_thenReturnsCorrectResults() {
 		// Given
-		Result result1 = new Result("Result 1", 1, "session1");
-		Result result2 = new Result("Result 2", 1, "session2");
-		Result result3 = new Result("Result 3", 2, "session3");
+		Result result1 = new Result("Result 1", 1, 1);
+		Result result2 = new Result("Result 2", 1, 2);
+		Result result3 = new Result("Result 3", 2, 3);
 		resultRepository.saveAll(List.of(result1, result2, result3));
 
 		// When
@@ -80,23 +80,23 @@ class ResultServiceApplicationTests {
 	@Test
 	void whenFindResult_withValidId_thenReturnsCorrectResult() {
 		// Given
-		Result result = new Result("Test Result", 1, "session123");
+		Result result = new Result("Test Result", 1, 123);
 		Result savedResult = resultRepository.save(result);
 
 		// When
-		Result foundResult = resultService.FindResult("1", savedResult.getId());
+		Result foundResult = resultService.findByUserAndSession(1, 123);
 
 		// Then
 		assertNotNull(foundResult);
 		assertThat(foundResult.getResult()).isEqualTo("Test Result");
 		assertThat(foundResult.getUser()).isEqualTo(1);
-		assertThat(foundResult.getSession()).isEqualTo("session123");
+		assertThat(foundResult.getSession()).isEqualTo(123);
 	}
 
 	@Test
 	void whenFindResult_withInvalidId_thenReturnsNull() {
 		// When
-		Result result = resultService.FindResult("1", "nonexistentId");
+		Result result = resultService.findByUserAndSession(1, 999);
 
 		// Then
 		assertNull(result);
