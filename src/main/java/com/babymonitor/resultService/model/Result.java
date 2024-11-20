@@ -1,6 +1,5 @@
 package com.babymonitor.resultService.model;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 //@Document(collection = "result")
 public class Result {
@@ -8,11 +7,11 @@ public class Result {
     private String id;
     private String result;
     private String session;
-    private String user;
+    private int user;
 
     public Result() {}
 
-    public Result( String result, String user, String session) {
+    public Result( String result, int user, String session) {
         this.user = user;
         this.session = session;
         this.result = result;
@@ -29,7 +28,7 @@ public class Result {
         return id;
     }
 
-    public String getUser() {
+    public int getUser() {
         return user;
     }
 
@@ -45,7 +44,7 @@ public class Result {
         this.id = id;
     }
 
-    public void setUser(String user) {
+    public void setUser(int user) {
         this.user = user;
     }
 

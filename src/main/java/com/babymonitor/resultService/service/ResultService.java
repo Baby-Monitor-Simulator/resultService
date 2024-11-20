@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ResultService {
-    List<Result> findByUser(String user);
+    List<Result> findByUser(int user);
     Result FindResult(String user, String id);
     void addResult(Result result);
 }

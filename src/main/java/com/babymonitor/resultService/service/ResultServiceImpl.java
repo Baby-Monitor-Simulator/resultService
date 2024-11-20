@@ -13,7 +13,7 @@ public class ResultServiceImpl implements ResultService {
     @Autowired
     private ResultRepository resultRepo;
 
-    public List<Result> findByUser(String user){
+    public List<Result> findByUser(int user){
         return resultRepo.findByUser(user);
     };
 
