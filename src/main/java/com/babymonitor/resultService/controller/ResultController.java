@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/results")
 @CrossOrigin
 public class ResultController
 {
@@ -28,7 +29,7 @@ public class ResultController
     @GetMapping("/{userid}/{resultid}")
     public Result getResult(@PathVariable int userid, @PathVariable int resultid)
     {
-        return resultServiceImpl.FindResult(String.valueOf(userid), String.valueOf(resultid));
+        return resultServiceImpl.findByUserAndSession(userid, resultid);
     }
 
     @PostMapping("/add")
