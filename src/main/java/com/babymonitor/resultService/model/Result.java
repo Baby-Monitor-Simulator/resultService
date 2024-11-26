@@ -8,13 +8,15 @@ public class Result {
     private String result;
     private int session;
     private int user;
+    private SimType simType;
 
     public Result() {}
 
-    public Result( String result, int user, int session) {
+    public Result( String result, int user, int session, SimType simType) {
         this.user = user;
         this.session = session;
         this.result = result;
+        this.simType = simType;
     }
 
     @Override
@@ -54,5 +56,13 @@ public class Result {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public SimType getSimType() {
+        return simType;
+    }
+
+    public void setSimType(SimType simType) {
+        this.simType = simType;
     }
 }

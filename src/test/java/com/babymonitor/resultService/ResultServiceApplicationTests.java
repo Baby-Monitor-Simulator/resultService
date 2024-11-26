@@ -1,6 +1,7 @@
 package com.babymonitor.resultService;
 
 import com.babymonitor.resultService.model.Result;
+import com.babymonitor.resultService.model.SimType;
 import com.babymonitor.resultService.repository.ResultRepository;
 import com.babymonitor.resultService.service.ResultServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +46,7 @@ class ResultServiceApplicationTests {
 	@Test
 	void whenAddResult_thenResultIsPersistedSuccessfully() {
 		// Given
-		Result result = new Result("Test Result", 1, 123);
+		Result result = new Result("Test Result", 1, 123, SimType.TRAINING);
 
 		// When
 		resultService.addResult(result);
@@ -57,14 +58,15 @@ class ResultServiceApplicationTests {
 		assertThat(savedResult.getResult()).isEqualTo("Test Result");
 		assertThat(savedResult.getUser()).isEqualTo(1);
 		assertThat(savedResult.getSession()).isEqualTo(123);
+		assertThat(savedResult.getSimType()).isEqualTo(SimType.TRAINING);
 	}
 
 	@Test
 	void whenFindByUser_thenReturnsCorrectResults() {
 		// Given
-		Result result1 = new Result("Result 1", 1, 1);
-		Result result2 = new Result("Result 2", 1, 2);
-		Result result3 = new Result("Result 3", 2, 3);
+		Result result1 = new Result("Result 1", 1, 1, SimType.TRAINING);
+		Result result2 = new Result("Result 2", 1, 2, SimType.TRAINING);
+		Result result3 = new Result("Result 3", 2, 3, SimType.EXAM);
 		resultRepository.saveAll(List.of(result1, result2, result3));
 
 		// When
@@ -80,7 +82,7 @@ class ResultServiceApplicationTests {
 	@Test
 	void whenFindResult_withValidId_thenReturnsCorrectResult() {
 		// Given
-		Result result = new Result("Test Result", 1, 123);
+		Result result = new Result("Test Result", 1, 123, SimType.EXAM);
 		Result savedResult = resultRepository.save(result);
 
 		// When
@@ -91,6 +93,7 @@ class ResultServiceApplicationTests {
 		assertThat(foundResult.getResult()).isEqualTo("Test Result");
 		assertThat(foundResult.getUser()).isEqualTo(1);
 		assertThat(foundResult.getSession()).isEqualTo(123);
+		assertThat(foundResult.getSimType()).isEqualTo(SimType.EXAM);
 	}
 
 	@Test

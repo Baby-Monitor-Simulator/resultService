@@ -2,6 +2,7 @@ package com.babymonitor.resultService;
 
 import com.babymonitor.resultService.controller.ResultController;
 import com.babymonitor.resultService.model.Result;
+import com.babymonitor.resultService.model.SimType;
 import com.babymonitor.resultService.service.ResultServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -34,8 +35,8 @@ class ResultControllerTest {
 
     @Test
     void whenGetAllResults_thenReturnJsonArray() throws Exception {
-        Result result1 = new Result("Result 1", 1, 1);
-        Result result2 = new Result("Result 2", 1, 2);
+        Result result1 = new Result("Result 1", 1, 1, SimType.TRAINING);
+        Result result2 = new Result("Result 2", 1, 2, SimType.TRAINING);
         List<Result> allResults = Arrays.asList(result1, result2);
 
         when(resultService.findByUser(1)).thenReturn(allResults);
@@ -47,12 +48,13 @@ class ResultControllerTest {
                 .andExpect(jsonPath("$[0].result", is("Result 1")))
                 .andExpect(jsonPath("$[0].session", is(1)))
                 .andExpect(jsonPath("$[1].result", is("Result 2")))
-                .andExpect(jsonPath("$[1].session", is(2)));
+                .andExpect(jsonPath("$[1].session", is(2)))
+                .andExpect(jsonPath("$[0].simType", is("TRAINING")));
     }
 
     @Test
     void whenGetSpecificResult_thenReturnJson() throws Exception {
-        Result result = new Result("Test Result", 1, 123);
+        Result result = new Result("Test Result", 1, 123, SimType.TRAINING);
         result.setId("123");
 
         when(resultService.findByUserAndSession(1, 123)).thenReturn(result);
@@ -62,7 +64,8 @@ class ResultControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result", is("Test Result")))
                 .andExpect(jsonPath("$.user", is(1)))
-                .andExpect(jsonPath("$.session", is(123)));
+                .andExpect(jsonPath("$.session", is(123)))
+                .andExpect(jsonPath("$.simType", is("TRAINING")));
     }
 
     @Test
@@ -77,7 +80,7 @@ class ResultControllerTest {
 
     @Test
     void whenAddNewResult_thenReturnSuccess() throws Exception {
-        Result result = new Result("New Result", 1, 1);
+        Result result = new Result("New Result", 1, 1, SimType.TRAINING);
 
         mockMvc.perform(post("/api/results/add")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -108,7 +111,7 @@ class ResultControllerTest {
 
     @Test
     void whenAddResultWithNullFields_thenReturnSuccess() throws Exception {
-        Result result = new Result(null, 1, 1);
+        Result result = new Result(null, 1, 1, SimType.TRAINING);
 
         mockMvc.perform(post("/api/results/add")
                         .contentType(MediaType.APPLICATION_JSON)

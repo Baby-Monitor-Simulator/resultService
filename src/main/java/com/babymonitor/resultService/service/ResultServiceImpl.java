@@ -22,6 +22,6 @@ public class ResultServiceImpl implements ResultService {
     };
 
     public void addResult(Result result){
-        resultRepo.save(new Result(result.getResult(), result.getUser(), result.getSession()));
+        resultRepo.save(new Result(result.getResult(), result.getUser(), result.getSession(), result.getSimType()));
     };
 }
