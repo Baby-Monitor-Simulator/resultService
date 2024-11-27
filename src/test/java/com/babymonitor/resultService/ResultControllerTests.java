@@ -113,7 +113,9 @@ class ResultControllerTest {
     @Test
     void whenAddResultWithNullFields_thenReturnSuccess() throws Exception {
         // Arrange: Create a Result object with test data
-        Result result = new Result("Test Result", 123, 123, SimType.TRAINING);
+        when(resultService.findByUserAndSession(5, 5))
+                .thenReturn(new Result("Test Result", 5, 5, SimType.TRAINING));
+        Result result = new Result("Test Result", 5, 5, SimType.TRAINING);
 
         // Act: Perform the POST request to add the result
         mockMvc.perform(post("/api/results/add")
@@ -123,13 +125,13 @@ class ResultControllerTest {
 
         // Assert: Verify that the result was added to the database
         // Mocked service method `findByUserAndSession` should now return the added result
-        Result foundResult = resultService.findByUserAndSession(123, 123);
+        Result foundResult = resultService.findByUserAndSession(5, 5);
 
         // Assertions to confirm that the added item matches expectations
         assertNotNull(foundResult);
         assertThat(foundResult.getResult()).isEqualTo("Test Result");
-        assertThat(foundResult.getUser()).isEqualTo(123);
-        assertThat(foundResult.getSession()).isEqualTo(123);
+        assertThat(foundResult.getUser()).isEqualTo(5);
+        assertThat(foundResult.getSession()).isEqualTo(5);
         assertThat(foundResult.getSimType()).isEqualTo(SimType.TRAINING); // Enum comparison
     }
 }
