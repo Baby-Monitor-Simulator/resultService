@@ -89,6 +89,7 @@ class ResultServiceApplicationTests {
 		Result foundResult = resultService.findByUserAndSession(1, 123);
 
 		// Then
+		assertNotNull(savedResult);
 		assertNotNull(foundResult);
 		assertThat(foundResult.getResult()).isEqualTo("Test Result");
 		assertThat(foundResult.getUser()).isEqualTo(1);

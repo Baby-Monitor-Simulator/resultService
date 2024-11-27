@@ -21,7 +21,8 @@ public class ResultServiceImpl implements ResultService {
         return resultRepo.findByUserAndSession(user, session);
     };
 
-    public void addResult(Result result){
-        resultRepo.save(new Result(result.getResult(), result.getUser(), result.getSession(), result.getSimType()));
+    public String addResult(Result result){
+        Result addedResult = resultRepo.save(new Result(result.getResult(), result.getUser(), result.getSession(), result.getSimType()));
+        return addedResult.getId();
     };
 }

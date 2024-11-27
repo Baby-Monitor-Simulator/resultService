@@ -35,7 +35,6 @@ public class ResultController
     @PostMapping("/add")
     public String addResult(@RequestBody Result result)
     {
-        resultServiceImpl.addResult(result);
-        return "Result added";
+        return resultServiceImpl.addResult(result);
     }
 }

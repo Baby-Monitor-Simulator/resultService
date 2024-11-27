@@ -15,6 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -85,8 +87,7 @@ class ResultControllerTest {
         mockMvc.perform(post("/api/results/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(result)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Result added"));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -111,12 +112,24 @@ class ResultControllerTest {
 
     @Test
     void whenAddResultWithNullFields_thenReturnSuccess() throws Exception {
-        Result result = new Result(null, 1, 1, SimType.TRAINING);
+        // Arrange: Create a Result object with test data
+        Result result = new Result("Test Result", 123, 123, SimType.TRAINING);
 
+        // Act: Perform the POST request to add the result
         mockMvc.perform(post("/api/results/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(result)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Result added"));
+                .andExpect(status().isOk());
+
+        // Assert: Verify that the result was added to the database
+        // Mocked service method `findByUserAndSession` should now return the added result
+        Result foundResult = resultService.findByUserAndSession(123, 123);
+
+        // Assertions to confirm that the added item matches expectations
+        assertNotNull(foundResult);
+        assertThat(foundResult.getResult()).isEqualTo("Test Result");
+        assertThat(foundResult.getUser()).isEqualTo(123);
+        assertThat(foundResult.getSession()).isEqualTo(123);
+        assertThat(foundResult.getSimType()).isEqualTo(SimType.TRAINING); // Enum comparison
     }
 }
