@@ -6,12 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ResultServiceImpl implements ResultService {
+    private final ResultRepository resultRepo;
+
     @Autowired
-    private ResultRepository resultRepo;
+    public ResultServiceImpl(ResultRepository resultRepo) {
+        this.resultRepo = resultRepo;
+    }
 
     public List<Result> findByUser(int user){
         return resultRepo.findByUser(user);

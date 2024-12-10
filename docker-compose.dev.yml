@@ -1,5 +1,5 @@
 services:
-  examination:
+  result:
     build:
       context: .
       dockerfile: Dockerfile.dev
