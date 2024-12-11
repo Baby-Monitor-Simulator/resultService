@@ -15,10 +15,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+
 @Service
 public class ResultServiceImpl implements ResultService {
+    private final ResultRepository resultRepo;
+
     @Autowired
-    private ResultRepository resultRepo;
+    public ResultServiceImpl(ResultRepository resultRepo) {
+        this.resultRepo = resultRepo;
+    }
 
     @Value("${jwt.rs256}")
     private String rsaPublicKeyString;
