@@ -46,11 +46,14 @@ class ResultServiceApplicationTests {
 		registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
 	}
 
+	// Consistent mock token user ID
+	private static final UUID MOCK_USER_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+
 	@BeforeEach
 	void setUp() {
 		resultRepository.deleteAll();
 
-		// Mock the HttpServletRequest with a JWT token
+		// Mock the HttpServletRequest with a consistent JWT token
 		mockRequest = mock(HttpServletRequest.class);
 		when(mockRequest.getHeader("Authorization")).thenReturn("Bearer mockToken");
 	}
@@ -58,18 +61,17 @@ class ResultServiceApplicationTests {
 	@Test
 	void whenAddResult_thenResultIsPersistedSuccessfully() {
 		// Given
-		UUID userid = UUID.randomUUID();
-		Result result = new Result("Test Result", userid, 123, SimType.TRAINING);
+		Result result = new Result("Test Result", MOCK_USER_ID, 123, SimType.TRAINING);
 
 		// When
 		resultService.addResult(result);
 
 		// Then
-		List<Result> savedResults = resultRepository.findByUser(userid);
+		List<Result> savedResults = resultRepository.findByUser(MOCK_USER_ID);
 		assertThat(savedResults).hasSize(1);
 		Result savedResult = savedResults.get(0);
 		assertThat(savedResult.getResult()).isEqualTo("Test Result");
-		assertThat(savedResult.getUser()).isEqualTo(userid);
+		assertThat(savedResult.getUser()).isEqualTo(MOCK_USER_ID);
 		assertThat(savedResult.getSession()).isEqualTo(123);
 		assertThat(savedResult.getSimType()).isEqualTo(SimType.TRAINING);
 	}
@@ -77,10 +79,9 @@ class ResultServiceApplicationTests {
 	@Test
 	void whenFindByUser_thenReturnsCorrectResults() {
 		// Given
-		UUID userid = UUID.randomUUID();
-		Result result1 = new Result("Result 1", userid, 1, SimType.TRAINING);
-		Result result2 = new Result("Result 2", userid, 2, SimType.TRAINING);
-		Result result3 = new Result("Result 3", userid, 3, SimType.EXAM);
+		Result result1 = new Result("Result 1", MOCK_USER_ID, 1, SimType.TRAINING);
+		Result result2 = new Result("Result 2", MOCK_USER_ID, 2, SimType.TRAINING);
+		Result result3 = new Result("Result 3", MOCK_USER_ID, 3, SimType.EXAM);
 		resultRepository.saveAll(List.of(result1, result2, result3));
 
 		// When
@@ -96,8 +97,7 @@ class ResultServiceApplicationTests {
 	@Test
 	void whenFindResult_withValidId_thenReturnsCorrectResult() {
 		// Given
-		UUID userid = UUID.randomUUID();
-		Result result = new Result("Test Result", userid, 123, SimType.EXAM);
+		Result result = new Result("Test Result", MOCK_USER_ID, 123, SimType.EXAM);
 		Result savedResult = resultRepository.save(result);
 
 		// When
@@ -107,7 +107,7 @@ class ResultServiceApplicationTests {
 		assertNotNull(savedResult);
 		assertNotNull(foundResult);
 		assertThat(foundResult.getResult()).isEqualTo("Test Result");
-		assertThat(foundResult.getUser()).isEqualTo(userid);
+		assertThat(foundResult.getUser()).isEqualTo(MOCK_USER_ID);
 		assertThat(foundResult.getSession()).isEqualTo(123);
 		assertThat(foundResult.getSimType()).isEqualTo(SimType.EXAM);
 	}
@@ -123,9 +123,6 @@ class ResultServiceApplicationTests {
 
 	@Test
 	void whenFindByUser_withNoResults_thenReturnsEmptyList() {
-		// Given
-		UUID userid = UUID.randomUUID();
-
 		// When
 		List<Result> results = resultService.findByUser(mockRequest);
 
