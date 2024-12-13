@@ -25,7 +25,7 @@ public class ResultServiceImpl implements ResultService {
         this.resultRepo = resultRepo;
     }
 
-    @Value("${jwt.rs256}")
+    @Value("${jwt_rsa256}")
     private String rsaPublicKeyString;
 
     public List<Result> findByUser(HttpServletRequest request){
