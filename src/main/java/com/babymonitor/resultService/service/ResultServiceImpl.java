@@ -38,10 +38,25 @@ public class ResultServiceImpl implements ResultService {
         return resultRepo.findByUserAndSession(user, session);
     };
 
-    public String addResult(Result result){
-        Result addedResult = resultRepo.save(new Result(result.getResult(), result.getUser(), result.getSession(), result.getSimType()));
+    public String addResult(Result result, HttpServletRequest request){
+        UUID user = extractSubject(request);
+        if (user == null) {
+            throw new UnauthorizedException("Invalid or missing authentication token");
+        }
+
+        // Ensure the result's user matches the authenticated user
+        result.setUser(user);
+
+        Result addedResult = resultRepo.save(new Result(result.getResult(), user, result.getSession(), result.getSimType()));
         return addedResult.getId();
-    };
+    }
+
+    // You'll need to create this custom exception
+    public class UnauthorizedException extends RuntimeException {
+        public UnauthorizedException(String message) {
+            super(message);
+        }
+    }
 
     private UUID extractSubject(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");

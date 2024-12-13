@@ -7,7 +7,9 @@ import com.babymonitor.resultService.service.ResultServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Import;
@@ -22,12 +24,12 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Testcontainers
 @DataMongoTest
 @Import(ResultServiceImpl.class)
+@ExtendWith(MockitoExtension.class)
 class ResultServiceApplicationTests {
 	@Container
 	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.4.2");
@@ -54,8 +56,7 @@ class ResultServiceApplicationTests {
 		resultRepository.deleteAll();
 
 		// Mock the HttpServletRequest with a consistent JWT token
-		mockRequest = mock(HttpServletRequest.class);
-		when(mockRequest.getHeader("Authorization")).thenReturn("Bearer mockToken");
+		lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer mockToken");
 	}
 
 	@Test
@@ -64,7 +65,7 @@ class ResultServiceApplicationTests {
 		Result result = new Result("Test Result", MOCK_USER_ID, 123, SimType.TRAINING);
 
 		// When
-		resultService.addResult(result);
+		String resultId = resultService.addResult(result, mockRequest);
 
 		// Then
 		List<Result> savedResults = resultRepository.findByUser(MOCK_USER_ID);
@@ -74,6 +75,7 @@ class ResultServiceApplicationTests {
 		assertThat(savedResult.getUser()).isEqualTo(MOCK_USER_ID);
 		assertThat(savedResult.getSession()).isEqualTo(123);
 		assertThat(savedResult.getSimType()).isEqualTo(SimType.TRAINING);
+		assertThat(resultId).isNotNull();
 	}
 
 	@Test
@@ -98,13 +100,12 @@ class ResultServiceApplicationTests {
 	void whenFindResult_withValidId_thenReturnsCorrectResult() {
 		// Given
 		Result result = new Result("Test Result", MOCK_USER_ID, 123, SimType.EXAM);
-		Result savedResult = resultRepository.save(result);
+		resultRepository.save(result);
 
 		// When
 		Result foundResult = resultService.findByUserAndSession(123, mockRequest);
 
 		// Then
-		assertNotNull(savedResult);
 		assertNotNull(foundResult);
 		assertThat(foundResult.getResult()).isEqualTo("Test Result");
 		assertThat(foundResult.getUser()).isEqualTo(MOCK_USER_ID);
@@ -128,5 +129,17 @@ class ResultServiceApplicationTests {
 
 		// Then
 		assertThat(results).isEmpty();
+	}
+
+	@Test
+	void whenAddResultWithoutToken_thenThrowUnauthorizedException() {
+		// Given
+		Result result = new Result("Test Result", MOCK_USER_ID, 123, SimType.TRAINING);
+		HttpServletRequest requestWithoutToken = mock(HttpServletRequest.class);
+		when(requestWithoutToken.getHeader("Authorization")).thenReturn(null);
+
+		// When & Then
+		assertThrows(ResultServiceImpl.UnauthorizedException.class,
+				() -> resultService.addResult(result, requestWithoutToken));
 	}
 }

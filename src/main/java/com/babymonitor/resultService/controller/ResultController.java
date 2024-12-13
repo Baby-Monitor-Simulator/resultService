@@ -36,8 +36,8 @@ public class ResultController
     }
 
     @PostMapping("/add")
-    public String addResult(@RequestBody Result result)
+    public String addResult(@RequestBody Result result, HttpServletRequest request)
     {
-        return resultServiceImpl.addResult(result);
+        return resultServiceImpl.addResult(result, request);
     }
 }

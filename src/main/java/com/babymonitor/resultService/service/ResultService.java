@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface ResultService {
     List<Result> findByUser(HttpServletRequest request);
     Result findByUserAndSession(int session, HttpServletRequest request);
-    String addResult(Result result);
+    String addResult(Result result, HttpServletRequest request);
 }
