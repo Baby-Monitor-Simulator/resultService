@@ -1,5 +1,5 @@
 services:
-  examination:
+  result:
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -9,6 +9,8 @@ services:
       - ./mvnw:/result/mvnw           # Mount the mvnw script
       - ./pom.xml:/result/pom.xml     # Mount the pom.xml if needed
     ports:
-      - "8083:8083"                     # Map port 8091 to the host
+      - "8085:8085"                     # Map port 8091 to the host
+    env_file:
+      - .env.properties
     environment:
       SPRING_PROFILES_ACTIVE: dev

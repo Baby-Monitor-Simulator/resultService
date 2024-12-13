@@ -1,20 +1,24 @@
 package com.babymonitor.resultService.model;
 import org.springframework.data.annotation.Id;
 
+import java.util.UUID;
+
 //@Document(collection = "result")
 public class Result {
     @Id
     private String id;
     private String result;
     private int session;
-    private int user;
+    private UUID user;
+    private SimType simType;
 
     public Result() {}
 
-    public Result( String result, int user, int session) {
+    public Result( String result, UUID user, int session, SimType simType) {
         this.user = user;
         this.session = session;
         this.result = result;
+        this.simType = simType;
     }
 
     @Override
@@ -28,7 +32,7 @@ public class Result {
         return id;
     }
 
-    public int getUser() {
+    public UUID getUser() {
         return user;
     }
 
@@ -44,7 +48,7 @@ public class Result {
         this.id = id;
     }
 
-    public void setUser(int user) {
+    public void setUser(UUID user) {
         this.user = user;
     }
 
@@ -54,5 +58,13 @@ public class Result {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public SimType getSimType() {
+        return simType;
+    }
+
+    public void setSimType(SimType simType) {
+        this.simType = simType;
     }
 }
