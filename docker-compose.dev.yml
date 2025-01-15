@@ -1,0 +1,16 @@
+services:
+  result:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./src:/result/src           # Mount the local src directory
+      - ./target:/result/target       # Mount the local target directory
+      - ./mvnw:/result/mvnw           # Mount the mvnw script
+      - ./pom.xml:/result/pom.xml     # Mount the pom.xml if needed
+    ports:
+      - "8085:8085"                     # Map port 8091 to the host
+    env_file:
+      - .env.properties
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
