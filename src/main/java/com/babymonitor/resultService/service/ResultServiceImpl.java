@@ -61,7 +61,7 @@ public class ResultServiceImpl implements ResultService {
     private UUID extractSubject(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
-        // Explicitly handle mock token for testing
+        // Handle mock token for testing
         if ("Bearer mockToken".equals(bearerToken)) {
             return UUID.fromString("00000000-0000-0000-0000-000000000000");
         }
@@ -78,12 +78,24 @@ public class ResultServiceImpl implements ResultService {
                         .parseClaimsJws(token)
                         .getBody();
 
-                return UUID.fromString(claims.getSubject());
+                String subject = claims.getSubject();
+
+                // If the subject is a simple ID, convert it to a UUID
+                if (subject.matches("\\d+")) {
+                    // Create a deterministic UUID from the numeric ID
+                    return UUID.nameUUIDFromBytes(("user:" + subject).getBytes());
+                }
+
+                // If it's already a UUID, parse it directly
+                try {
+                    return UUID.fromString(subject);
+                } catch (IllegalArgumentException e) {
+                    throw new UnauthorizedException("Invalid user ID format in token");
+                }
             } catch (Exception e) {
-                // Log the error or handle it as appropriate
-                return null;
+                throw new UnauthorizedException("Invalid or expired token");
             }
         }
-        return null;
+        throw new UnauthorizedException("No authorization token provided");
     }
 }
