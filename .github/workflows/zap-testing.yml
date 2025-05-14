@@ -20,7 +20,7 @@ jobs:
         
       - name: Build container image
         run: |
-            docker build -t result-service .
+            docker build -t result-service ./Dockerfile.dev
 
       - name: Run application container
         run: |
