@@ -2,9 +2,9 @@ name: DAST with OWASP ZAP
 
 on:
   push:
-    branches: [ main, dast-pipeline]
+    branches: [ main, testing/dast-pipeline]
   pull_request:
-    branches: [ main, dast-pipeline]
+    branches: [ main, testing/dast-pipeline]
     
     
 permissions:
