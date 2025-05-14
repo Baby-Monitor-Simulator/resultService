@@ -19,9 +19,8 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Build container image
-        run: ls
-      #  run: |
-      #      docker build -t result-service Dockerfile.dev
+        run: |
+          docker build -t result-service -f Dockerfile.dev .
 
       - name: Run application container
         run: |
