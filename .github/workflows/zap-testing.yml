@@ -28,10 +28,10 @@ jobs:
             -p 8085:8085 \
             result-service
       # 4. Wait until the app is responding
-      - name: Wait for web app to be up
-        run: |
-          timeout 120 bash -c \
-          'until curl -s http://localhost:8085/results/byUser; do sleep 1; done'
+      #- name: Wait for web app to be up
+      #  run: |
+      #    timeout 120 bash -c \
+      #    'until curl -s http://localhost:8085/results/byUser; do sleep 1; done'
 
       # 5. Run ZAP full scan against localhost
       - name: OWASP ZAP Full Scan
